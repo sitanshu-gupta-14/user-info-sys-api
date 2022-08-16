@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<flow name="get-user-flow" doc:id="99301d2f-a558-4224-b441-07d526c17eec" >
+		<logger level="INFO" doc:name="Start logging" doc:id="f8c77509-9fc1-4853-ac3a-8e586445a975" message="#[payload]" />
+		<salesforce:query doc:name="Query" doc:id="894724bd-d389-4bb0-93e5-a3d87e87fef8" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[SELECT uId__c, name__c, age__c, contact__c, email__c, city__c FROM user__c]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="Create response" doc:id="98914223-df1a-4da9-8211-922fe0f89189">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End logging" doc:id="699bc209-d5cb-41d1-b906-8039579db160" />
+	</flow>
+</mule>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-user-userId-flow" doc:id="61d3100b-4850-4832-9355-2b5f81dabf27" >
+		<logger level="INFO" doc:name="Start logging" doc:id="77536d8c-7513-4c04-b43a-d875b08188ac" message="#[payload]" />
+		<salesforce:query doc:name="Query" doc:id="d162f6ef-b270-43c5-b741-d8e3dc93631b" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[SELECT uId__c, name__c, age__c, contact__c, email__c, city__c FROM user__c WHERE uId__c=:uId]]></salesforce:salesforce-query>
+			<salesforce:parameters><![CDATA[#[output application/java
+---
+{
+	uId : attributes.uriParams.userId
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Create response" doc:id="449941cc-b1f7-48b0-80b3-bc87cc679fae">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End logging" doc:id="508291bb-aca2-4b14-9750-111934df4a1a" />
+	</flow>
+</mule>

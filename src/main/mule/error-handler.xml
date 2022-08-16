@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="global-error-handler" doc:id="1e653d0b-0df8-4260-8294-35e0f63ba923" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9fb488e4-8b9c-4714-9b1a-75729f99b848" type="APIKIT:BAD_REQUEST" >
+			<ee:transform doc:name="400 - Bad Request" doc:id="f460696b-dd7c-48c2-8ad1-7877f4a35a8f" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorMessage":"Message is Incorrect. Bad Request",
+  "statusCode":"400 - Bad Request"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="fae6c685-5f69-4724-ac82-6f75b70e8462" type="APIKIT:NOT_FOUND" >
+			<ee:transform doc:name="404 - Not Found" doc:id="d0a7286f-e374-438c-b813-107db7854e11" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorMessage":"Resource Not Fount",
+  "statusCode":"404 - Not Found"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5207e440-3cb4-4f6b-b22d-7e84807c78af" type="APIKIT:METHOD_NOT_ALLOWED" >
+			<ee:transform doc:name="405 - Not Allowed" doc:id="efe606bc-7f28-417e-8e03-dbe7591b88f9" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorMessage":"Method Not Allowed",
+  "statusCode":"405 - Not Allowed"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[405]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1e61ddc2-f5fa-4c23-8d03-6e5992ac7bc1" type="APIKIT:NOT_ACCEPTABLE" >
+			<ee:transform doc:name="406 - Not Acceptable" doc:id="9f465862-c60e-4605-a42d-00dcccfba58e" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorMessage":"Not Acceptable",
+  "statusCode":"406 - Not Acceptable"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[406]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c2ca2a00-6706-44a5-a4e1-fe5e383a99a6" type="APIKIT:UNSUPPORTED_MEDIA_TYPE" >
+			<ee:transform doc:name="415 - Unsupported Type" doc:id="e1b96fae-5cc0-484f-9be9-2339da767281" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorMessage":"Unsupported Media Type",
+  "statusCode":"415 - Unsupported"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[415]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="cf0facf8-0519-4183-9eb5-450d1780554d" type="APIKIT:NOT_IMPLEMENTED" >
+			<ee:transform doc:name="501 - Not Implemented" doc:id="dee1b3fd-af80-4748-9038-1df1b07e0e30" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorMessage":"Not Implemented",
+  "statusCode":"501 - Not Implemented"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[501]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="api-console-error-handler" doc:id="87a3bba5-5056-4213-b7bb-5f84dc336b3e" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="fc110db6-574a-4847-8374-34003a3e4835" type="APIKIT:NOT_FOUND" >
+			<ee:transform doc:name="404 - Not Found" doc:id="c1c652d8-c5d7-4fbd-a681-eac02d97dcf7" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorMessage":"Resource Not Fount",
+  "statusCode":"404 - Not Found"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>

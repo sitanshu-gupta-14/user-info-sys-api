@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="post-user-userId-suite.xml" />
+	<munit:test name="post-user-userId-flow-test" doc:id="3939919d-00ca-4bfa-8f0d-0b121e4c8abe" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Create" doc:id="c374725a-bde4-4ad5-8301-5c590198726d" processor="salesforce:create">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ff0501d3-5723-4a2d-897b-f44068ce3b8d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java  --- readUrl('classpath://postuseruserIdflowtest\mock_payload.dwl')]" mediaType="application/java " encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://postuseruserIdflowtest\mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:spy doc:name="Spy Create response" doc:id="6a86d823-e063-48fd-b19b-102e49298d3d" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="5b6ced6a-5973-4d27-ba9f-24812fed7b13" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="90b75215-ee0e-47db-8f97-3c1786d618e3" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import postuseruserIdflowtest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="274b5054-b1b3-4873-a97d-0309d6e3250d" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import postuseruserIdflowtest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Create input request" doc:id="10975fcb-7904-469d-b466-19c5d6189193" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cabce07f-d974-4e61-b716-c750c9ae4c3c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="cb5e9788-757a-4116-ad8b-e6a2c2ede1c0" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import postuseruserIdflowtest::spy_assert_payload2
+---
+spy_assert_payload2::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="9f0076bf-343e-4e72-939f-0b9f96d2a8fd" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import postuseruserIdflowtest::spy_assert_payload3
+---
+spy_assert_payload3::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="dcc4e6a8-8096-462c-9e3d-17ca2c3e9daf" >
+				<munit:payload value="#[output application/json  --- readUrl('classpath://postuseruserIdflowtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json " />
+				<munit:attributes value="#[readUrl('classpath://postuseruserIdflowtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://postuseruserIdflowtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post-user-userId-flow" doc:id="5d1cc060-1b62-4aba-9b17-8e4295e68d4a" name="post-user-userId-flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="3a685c12-f4d5-4bf8-b984-cf22e32763bf" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import postuseruserIdflowtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify End logging" doc:id="9967e2e7-ada8-4413-90f1-a25a93d9d89a" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="eace1055-0ad7-4a8b-baa4-718528f2bd8a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Start logging" doc:id="17e7b9fe-f967-494e-bc6b-904e18a22b71" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d4f1838e-e21d-4016-9969-865ab0a797ca" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Create response" doc:id="1b288836-5b94-4de7-8e3a-9df16b0f2dbe" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="5b6ced6a-5973-4d27-ba9f-24812fed7b13" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Create input request" doc:id="2de90cea-3d79-4199-bf2f-127e4682b5e7" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cabce07f-d974-4e61-b716-c750c9ae4c3c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

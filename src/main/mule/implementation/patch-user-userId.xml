@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="patch-user-userId-flow" doc:id="19ab7c69-2648-49f9-abc6-a25dd7826fc5" >
+		<logger level="INFO" doc:name="Start logging" doc:id="85df7471-c881-417d-825d-3e4481fbba96" message="#[payload]"/>
+		<ee:transform doc:name="Creating variable uId" doc:id="b7647aa2-241b-46c8-b1c7-0df02db00060" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="initialPayload" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+				<ee:set-variable variableName="uId" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.uriParams.userId]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query doc:name="Query" doc:id="9fce2831-1229-4936-8579-967543f9bc61" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT Id FROM user__c WHERE uId__c=:uId]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	uId : attributes.uriParams.userId
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Create input request" doc:id="117c0590-9f6c-4712-bebe-534c75e7f466" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	Id: payload.Id[0],
+	uId__c: vars.uId as Number,
+	name__c: vars.initialPayload.name,
+	age__c: vars.initialPayload.age,
+	contact__c: vars.initialPayload.contact,
+	email__c: vars.initialPayload.email,
+	city__c: vars.initialPayload.city
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:update type="user__c" doc:name="Update" doc:id="8c4d797e-0ff8-414d-a3d0-b7de2b2cbcb8" config-ref="Salesforce_Config">
+		</salesforce:update>
+		<ee:transform doc:name="Create response" doc:id="722e2b7a-1280-498a-9bda-575ee5f170f7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload.successful]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End logging" doc:id="b56c559c-0bbc-420c-bcdb-2ffea57d8097" message="#[payload]"/>
+	</flow>
+</mule>

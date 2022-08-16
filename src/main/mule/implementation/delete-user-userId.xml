@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="delete-user-userId-flow" doc:id="5c88ba57-e7d6-4e72-84fe-1fcb9fe961f3" >
+		<logger level="INFO" doc:name="Start logging" doc:id="3903502d-87f0-4beb-b999-372d5a5639ab" message="#[payload]"/>
+		<salesforce:query doc:name="Query" doc:id="cfe669ed-7242-4faf-97c6-e6ee62aa2883" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT Id FROM user__c WHERE uId__c=:uId]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	uId : attributes.uriParams.userId
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Create input request" doc:id="1ddf6181-70cd-4a20-b6a2-15d732886036" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map{
+	Id: $.Id
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:delete doc:name="Delete" doc:id="d80b31e7-3566-4a8b-b2bb-265892f768f4" config-ref="Salesforce_Config">
+			<salesforce:ids ><![CDATA[#[payload.Id]]]></salesforce:ids>
+		</salesforce:delete>
+		<ee:transform doc:name="Create Response" doc:id="7a1b63b5-fd06-403f-aac6-59a269043873" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload.successful]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End logging" doc:id="41142159-8f7a-496e-90c6-2df2d6d9f522" message="#[payload]"/>
+	</flow>
+</mule>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<flow name="post-user-userId-flow" doc:id="e333dbda-3575-457a-946d-6e667b9273ac" >
+		<logger level="INFO" doc:name="Start logging" doc:id="d4f1838e-e21d-4016-9969-865ab0a797ca" message="#[payload]" />
+		<ee:transform doc:name="Create input request" doc:id="cabce07f-d974-4e61-b716-c750c9ae4c3c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	uId__c: attributes.uriParams.userId as Number,
+	name__c: payload.name,
+	age__c: payload.age,
+	contact__c: payload.contact,
+	email__c: payload.email,
+	city__c: payload.city
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create type="user__c" doc:name="Create" doc:id="ff0501d3-5723-4a2d-897b-f44068ce3b8d" config-ref="Salesforce_Config" />
+		<ee:transform doc:name="Create response" doc:id="5b6ced6a-5973-4d27-ba9f-24812fed7b13" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload.successful]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End logging" doc:id="eace1055-0ad7-4a8b-baa4-718528f2bd8a" />
+	</flow>
+</mule>
